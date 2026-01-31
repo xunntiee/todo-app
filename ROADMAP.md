@@ -1,216 +1,100 @@
-# JavaScript Cơ Bản Cho Todo App (React Native – Beginner)
+# 🚀 Roadmap Chi Tiết: Xây Dựng Todo & Habit Tracker App (React Native)
 
-> Mục tiêu của phần này:
-> - Hiểu dữ liệu Todo được lưu như thế nào
-> - Hiểu cách React Native xử lý danh sách
-> - Chuẩn bị nền tảng để làm Add / Toggle / Delete Todo
+Chào bạn! Với vai trò là người mới bắt đầu, lộ trình này được thiết kế để giúp bạn không bị "ngợp" bằng cách chia nhỏ các kiến thức cần học theo từng giai đoạn thực chiến.
 
 ---
 
-## 1. Array & Object – Nền tảng dữ liệu của Todo App
+## 🟢 PHẦN 1: KIẾN THỨC CẦN HỌC TRƯỚC (PREREQUISITES)
 
-### Vì sao cần học?
-Trong Todo App:
-- **Mỗi công việc** là một **object**
-- **Danh sách công việc** là một **array các object**
+Trước khi chạm vào React Native, bạn cần nắm vững "vũ khí" JavaScript và tư duy React.
 
-Nếu không hiểu array & object:
-- Bạn sẽ không hiểu todo được lưu ở đâu
-- Không biết toggle / delete hoạt động thế nào
-- Không đọc nổi code React Native
+### 1. JavaScript (ES6+) - Nền tảng quan trọng nhất
 
----
+Đừng học hết JavaScript, chỉ cần tập trung vào các phần này cho dự án Todo:
 
-### Object là gì trong Todo App?
-- Object đại diện cho **1 todo**
-- Chứa toàn bộ thông tin của todo đó
+- **Object & Array:** Cách lưu dữ liệu 1 Todo (Object) và Danh sách Todo (Array).
+- **Arrow Functions:** Cách viết hàm xử lý khi bấm nút (onPress).
+- **Array Methods:**
+  - `map()`: Để hiển thị danh sách và Update trạng thái todo.
+  - `filter()`: Để Xóa todo khỏi danh sách.
+- **Destructuring:** Giúp code sạch hơn khi lấy dữ liệu từ Object.
 
-Một todo cần hiểu rõ các thuộc tính:
-- `id`: để phân biệt các todo
-- `title`: nội dung chính (bắt buộc)
-- `description`: mô tả (không bắt buộc)
-- `status` / `done`: trạng thái hoàn thành
+### 2. React Core Concepts
 
-👉 Tư duy quan trọng:
-- **Không thao tác trực tiếp trên UI**
-- **Luôn thao tác trên object trước, UI tự cập nhật**
+- **JSX:** Cách viết giao diện giống HTML trong JavaScript.
+- **State (`useState`):** Để lưu danh sách Todo. Khi State thay đổi, màn hình tự cập nhật.
+- **Props:** Cách truyền dữ liệu từ màn hình Danh sách xuống từng Item Todo nhỏ.
+- **Component:** Chia nhỏ giao diện (Vd: `TodoItem.tsx`, `Header.tsx`).
 
 ---
 
-### Array là gì trong Todo App?
-- Array là nơi lưu **toàn bộ danh sách todo**
-- React Native render giao diện dựa trên array này
+## 🟡 PHẦN 2: LỘ TRÌNH XÂY DỰNG DỰ ÁN (BUILDING STEPS)
 
-👉 Tư duy quan trọng:
-- Thêm todo = thêm phần tử vào array
-- Xoá todo = loại phần tử khỏi array
-- Toggle todo = cập nhật phần tử trong array
+Dưới đây là các bước thực hiện chi tiết cho yêu cầu của bạn:
 
----
+### Bước 1: Setup Giao diện & Core Components
 
-### THỰC HÀNH – Array & Object
-- Viết ra cấu trúc dữ liệu cho 1 todo
-- Viết ra danh sách 3–5 todo giả
-- Xác định:
-  - Thuộc tính nào là bắt buộc
-  - Thuộc tính nào là optional
-- Tự hỏi:
-  - Khi bấm xoá → todo biến mất ở đâu?
-  - Khi bấm done → thuộc tính nào thay đổi?
+- **Học:** `View`, `Text`, `StyleSheet`, `SafeAreaView`.
+- **Làm:** Tạo 2 file màn hình trống: `TodoListScreen.tsx` và `AddTodoScreen.tsx`. Thử tạo 1 "Card" hiển thị 1 Todo mẫu bằng `StyleSheet`.
 
----
+### Bước 2: Hiển thị Danh sách (List)
 
-## 2. Arrow Function – Cách viết hàm trong React Native
+- **Học:** `FlatList` (Tốt hơn `ScrollView` vì nó mượt hơn khi danh sách dài).
+- **Làm:** Sử dụng `mock_data` để render danh sách Todo lên màn hình. Mỗi Todo có: Title, Description, Status.
 
-### Vì sao cần học?
-React Native:
-- Gần như **100% logic dùng arrow function**
-- Event (onPress, onChangeText) đều dùng arrow function
+### Bước 3: Điều hướng màn hình (Navigation)
 
-Nếu không quen:
-- Bạn sẽ không hiểu callback
-- Không hiểu vì sao hàm được gọi khi bấm nút
+- **Học:** `@react-navigation/native` và `@react-navigation/stack`.
+- **Làm:** Cài đặt thư viện, tạo Stack Navigator để chuyển qua lại giữa màn hình "Danh sách" và "Thêm mới".
 
----
+### Bước 4: Chức năng Thêm mới & Validation (Form)
 
-### Arrow function dùng để làm gì trong Todo App?
-Arrow function dùng để:
-- Xử lý sự kiện (bấm nút, nhập text)
-- Thao tác với todo list
-- Truyền logic từ component cha xuống component con
+- **Học:** `TextInput`, `Button`, và Logic Validate (If/Else).
+- **Làm:**
 
-👉 Tư duy quan trọng:
-- **Hàm = hành động của người dùng**
-- Người dùng bấm → arrow function chạy
+* Tại màn hình 2: Tạo ô nhập Title và Description.
+* Viết logic kiểm tra: Nếu Title rỗng -> Hiện cảnh báo (Alert) -> Không cho lưu.
+* Nếu hợp lệ -> Gọi hàm thêm Todo.
 
----
+### Bước 5: Logic Toggle & Xóa (Interaction)
 
-### THỰC HÀNH – Arrow Function
-- Viết các hành động bằng lời:
-  - Thêm todo
-  - Xoá todo
-  - Toggle trạng thái
-- Với mỗi hành động, xác định:
-  - Cần nhận tham số gì? (id, title, description)
-  - Hàm này sẽ tác động tới **todo nào**
-- Tập đọc code:
-  - Khi thấy `() => ...` → hiểu là “khi người dùng làm gì đó”
+- **Học:** `Alert.alert()` (Để làm Modal confirm xóa).
+- **Làm:**
+
+* **Toggle:** Khi bấm vào Todo -> Dùng `map()` để đổi `isDone: true <-> false`.
+* **Delete:** Khi bấm nút Xóa -> Hiện Modal `Confirm?` -> Nếu OK thì dùng `filter()` để loại bỏ Todo đó.
+
+### Bước 6: Quản lý trạng thái Global (State Management)
+
+- **Học:** `Zustand` (Khuyên dùng cho người mới vì cực kỳ dễ hiểu hơn Redux).
+- **Làm:** Tạo 1 "Store" chung để lưu danh sách Todo. Nhờ đó, khi bạn Thêm ở màn hình 2, màn hình 1 sẽ tự cập nhật ngay lập tức.
+
+### Bước 7: Lưu trữ lâu dài (Local Storage)
+
+- **Học:** `AsyncStorage` (hoặc MMKV).
+- **Làm:** Lưu danh sách Todo xuống bộ nhớ máy. Khi tắt app mở lại, dữ liệu vẫn còn đó.
 
 ---
 
-## 3. map() – Cập nhật Todo (Toggle Status)
+## 🔵 PHẦN 3: YÊU CẦU KỸ THUẬT CỤ THỂ (Dành cho bạn)
 
-### Vì sao cần học?
-Trong Todo App:
-- Bạn **không bao giờ** sửa trực tiếp 1 todo
-- Mỗi lần thay đổi → tạo **danh sách mới**
-
-👉 map() là công cụ:
-- Duyệt từng todo
-- Chỉ sửa todo cần sửa
-- Giữ nguyên todo còn lại
+| Tính năng           | Thành phần cần dùng                   | Lưu ý cho người mới                                           |
+| :------------------ | :------------------------------------ | :------------------------------------------------------------ |
+| **Màn 1: Hiển thị** | `FlatList`                            | Nên chia nhỏ component `TodoItem` để dễ quản lý.              |
+| **Màn 2: Thêm mới** | `TextInput`, `useState`               | Dùng `trim()` khi validate title để tránh nhập toàn dấu cách. |
+| **Toggle Status**   | `isDone ? "Strikethrough" : "Normal"` | Dùng Style conditional để gạch ngang text khi xong.           |
+| **Delete Todo**     | `Alert.alert`                         | Luôn hỏi người dùng trước khi thực hiện hành động hủy diệt.   |
+| **Lưu dữ liệu**     | `useEffect`                           | Tự động Save mỗi khi danh sách Todo thay đổi.                 |
 
 ---
 
-### map() hoạt động thế nào trong Todo App?
-- Đi qua từng todo trong danh sách
-- So sánh `id`
-- Nếu đúng todo cần sửa → tạo object mới
-- Nếu không → giữ nguyên
+## 🚩 GỢI Ý CÁC THƯ VIỆN NÊN DÙNG (TECH STACK)
 
-👉 map() dùng cho:
-- Toggle done / not done
-- Update title, description (sau này)
+1.  **Navigation:** `react-navigation`
+2.  **State:** `Zustand` (Dễ học nhất)
+3.  **Storage:** `@react-native-async-storage/async-storage`
+4.  **Icon:** `lucide-react-native` hoặc `expo-vector-icons`
 
 ---
 
-### THỰC HÀNH – map()
-- Vẽ sơ đồ:
-  - Danh sách todo cũ
-  - Danh sách todo mới
-- Xác định:
-  - Todo nào bị thay đổi?
-  - Todo nào giữ nguyên?
-- Tập đọc logic:
-  - “Nếu id trùng → thay đổi”
-  - “Nếu không trùng → giữ nguyên”
-
----
-
-## 4. filter() – Xoá Todo
-
-### Vì sao cần học?
-Xoá todo:
-- Không phải “xoá trên UI”
-- Mà là **loại bỏ phần tử khỏi array**
-
-👉 filter() giúp:
-- Giữ lại những todo hợp lệ
-- Loại bỏ todo cần xoá
-
----
-
-### filter() hoạt động thế nào?
-- Duyệt qua từng todo
-- Kiểm tra điều kiện
-- Todo nào **không thoả điều kiện** → bị loại
-
-👉 filter() dùng cho:
-- Delete todo
-- Filter theo status (done / not done – nâng cao)
-
----
-
-### THỰC HÀNH – filter()
-- Viết ra danh sách todo ban đầu
-- Chọn 1 todo cần xoá
-- Xác định:
-  - Todo nào bị loại?
-  - Todo nào còn lại?
-- Tập suy nghĩ:
-  - “Xoá” = “không đưa vào danh sách mới”
-
----
-
-## 5. Tư duy quan trọng: Không mutate dữ liệu
-
-### Vì sao React bắt buộc?
-- React chỉ render lại khi **dữ liệu mới**
-- Nếu sửa trực tiếp → React không nhận ra
-
-👉 Nguyên tắc:
-- ❌ Không sửa trực tiếp array / object
-- ✅ Luôn tạo array / object mới
-
----
-
-### THỰC HÀNH – Tư duy immutable
-- Với mỗi hành động (add, toggle, delete):
-  - Hỏi: “Danh sách mới trông như thế nào?”
-- Không nghĩ:
-  - “Sửa todo này”
-- Mà nghĩ:
-  - “Tạo danh sách todo mới”
-
----
-
-## 6. Tổng kết phần JavaScript cho Todo App
-
-### Bạn cần nắm chắc
-- Object = 1 todo
-- Array = danh sách todo
-- Arrow function = hành động người dùng
-- map() = cập nhật todo
-- filter() = xoá todo
-
----
-
-## 7. Khi nào bạn sẵn sàng học tiếp React Native?
-Bạn đã sẵn sàng khi:
-- Nhìn vào danh sách todo và hiểu dữ liệu
-- Biết toggle / delete ảnh hưởng tới đâu
-- Không còn sợ `map()` và `filter()`
-
-👉 **Bước tiếp theo đề xuất:**
-- `useState` & cách React quản lý state
-- Props & TodoItem component
+**Bạn muốn tôi bắt đầu hướng dẫn chi tiết Bước 1 (Setup dự án & Giao diện cơ bản) ngay bây giờ không?**

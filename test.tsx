@@ -1,14 +1,17 @@
 import {
+  Alert,
   Button,
+  FlatList,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Todo } from "./src/types/todo";
+import { useState } from "react";
 
 const mock_data: Todo[] = [
   {
@@ -31,38 +34,73 @@ const mock_data: Todo[] = [
     createdAt: 123456789,
   },
 ];
+
 export default function Test() {
+  const [todos, setTodos] = useState<Todo[]>(mock_data);
+  const [isDone, setIsDone] = useState<boolean>(false);
+
+  const handleDelete = (id: string) => {
+    Alert.alert(
+      "Xác nhận",
+      "Bạn có muốn xóa không?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          style: "destructive",
+          onPress: () => {
+            setTodos((prev) => prev.filter((item) => item.id !== id));
+          },
+        },
+      ],
+      { cancelable: true },
+    );
+  };
+
+  const handleToggle = (id: string) => {
+    setTodos((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, isDone: !item.isDone } : item,
+      ),
+    );
+  };
   return (
-    // <Pressable onPress={() => {
-    //     return alert("Hello")
-    // }}>
-    //     <Text>Press me</Text>
-    // </Pressable>
     <SafeAreaView style={{ flex: 1 }}>
-      <Pressable onPress={() => alert("Hello")}>
-        <Text style={style.test}>Press me</Text>
-        {/* Button tự xử lý sự kiện onPress nên không thể dùng Pressable để bọc Button */}
-        {/* <Button title="Click me" />  */}
-      </Pressable>
-
-      <Button title="Click me" onPress={() => alert("Hello")} />
-
+      <Text style={{ fontSize: 24, fontWeight: "bold" }}>Danh sách Test</Text>
       <TextInput
         style={style.textInput}
         // onChangeText={() => alert("Test onChange")}
         placeholder="Nhập: ...."
         placeholderTextColor={"red"}
       />
-      <ScrollView>
-        {mock_data.map((todo) => (
-          <View style={style.card} key={todo.id}>
-            <Text>{todo.title}</Text>
-            <Text style={{ fontSize: 12 }}>
-              Trạng thái: {todo.isDone ? "OK" : "Not OK"}
-            </Text>
+
+      <FlatList
+        data={todos}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={style.card}>
+            <Text>{item.title}</Text>
+            <Text>{item.description}</Text>
+            <Pressable
+              onPress={() => handleToggle(item.id)}>
+                <Text style={{ fontSize: 12 }}>
+                  Trạng thái: {item.isDone ? "OK" : "Not OK"}
+                </Text>
+              </Pressable>
+
+            <Pressable
+              onPress={() => {
+                handleDelete(item.id);
+              }}
+            >
+              <Text>Xóa</Text>
+            </Pressable>
           </View>
-        ))}
-      </ScrollView>
+        )}
+      />
     </SafeAreaView>
   );
 }
@@ -84,7 +122,7 @@ const style = StyleSheet.create({
     borderWidth: 5,
     borderRadius: 10,
     borderColor: "black",
-    margin: 10,
+    marginTop: 10,
+    backgroundColor: "white",
   },
-  
 });
