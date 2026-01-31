@@ -37,7 +37,8 @@ const mock_data: Todo[] = [
 
 export default function Test() {
   const [todos, setTodos] = useState<Todo[]>(mock_data);
-  const [isDone, setIsDone] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
 
   const handleDelete = (id: string) => {
     Alert.alert(
@@ -67,29 +68,64 @@ export default function Test() {
       ),
     );
   };
+
+  const handleAddTodo = () => {
+    if (!handleValidateTitle()) return;
+    const newTodo = {
+      id: Date.now().toString(),
+      title: title,
+      description: desc,
+      isDone: false,
+      createdAt: Date.now(),
+    };
+    setTodos((prev) => [...prev, newTodo]);
+    setTitle("");
+    setDesc("");
+  };
+
+  const handleValidateTitle = () => {
+    if (title.trim() === "") {
+      Alert.alert("Error", "Title is required");
+      return false;
+    }
+    return true;
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Text style={{ fontSize: 24, fontWeight: "bold" }}>Danh sách Test</Text>
-      <TextInput
-        style={style.textInput}
-        // onChangeText={() => alert("Test onChange")}
-        placeholder="Nhập: ...."
-        placeholderTextColor={"red"}
-      />
-
+      <View>
+        <TextInput
+          value={title}
+          onChangeText={setTitle}
+          style={style.textInput}
+          placeholder="Nhập tiêu đề: ...."
+          placeholderTextColor={"red"}
+        />
+        <TextInput
+          value={desc}
+          onChangeText={setDesc}
+          style={style.textInput}
+          placeholder="Nhập mô tả: ...."
+          placeholderTextColor={"red"}
+        />
+        <Pressable onPress={handleAddTodo}>
+          <Text>Thêm</Text>
+        </Pressable>
+      </View>
       <FlatList
         data={todos}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={style.card}>
-            <Text>{item.title}</Text>
-            <Text>{item.description}</Text>
-            <Pressable
-              onPress={() => handleToggle(item.id)}>
-                <Text style={{ fontSize: 12 }}>
-                  Trạng thái: {item.isDone ? "OK" : "Not OK"}
-                </Text>
-              </Pressable>
+            <Text style={item.isDone && style.titleDone}>{item.title}</Text>
+            <Text style={item.isDone && style.titleDone}>
+              {item.description}
+            </Text>
+            <Pressable onPress={() => handleToggle(item.id)}>
+              <Text style={{ fontSize: 12 }}>
+                Trạng thái: {item.isDone ? "OK" : "Not OK"}
+              </Text>
+            </Pressable>
 
             <Pressable
               onPress={() => {
@@ -124,5 +160,9 @@ const style = StyleSheet.create({
     borderColor: "black",
     marginTop: 10,
     backgroundColor: "white",
+  },
+  titleDone: {
+    textDecorationLine: "line-through",
+    opacity: 0.5,
   },
 });
