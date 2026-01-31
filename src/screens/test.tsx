@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Todo } from "./src/types/todo";
+import { Todo } from "../types/todo";
 import { useState } from "react";
 
 const mock_data: Todo[] = [
