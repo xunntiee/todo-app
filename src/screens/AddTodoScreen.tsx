@@ -33,7 +33,7 @@ export default function AddTodoScreen() {
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <View style={style.header}>
           <Pressable onPress={() => navigation.goBack()}>
-            <X color="white" size={25} />
+            <X style={{marginLeft: 10}} color="white" size={25} />
           </Pressable>
           <Text style={style.headerTitle}>Thêm mới Todo</Text>
           <View style={style.headerRight} />

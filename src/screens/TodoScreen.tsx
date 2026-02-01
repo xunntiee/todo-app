@@ -233,8 +233,8 @@ const style = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     padding: 10,
-    borderRadius: 10,
-    backgroundColor: "rgba(167, 24, 24, 0.1)",
+    borderRadius: 20,
+    backgroundColor: "rgba(32, 158, 28, 0.1)",
   },
 
   filterButtonActive: {
@@ -242,7 +242,7 @@ const style = StyleSheet.create({
   },
   filterText: {
     color: "white",
-    fontSize: 16,
+    fontSize: 19,
     fontWeight: "500",
   },
 
