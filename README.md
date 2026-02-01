@@ -7,13 +7,13 @@
 ---
 
 ### 2. Thêm mới Todo & Validation
-![Thêm mới Todo](./screenshots/add.png)
+![Thêm mới Todo](./screenshots/add-todo.png)
 
 ---
 
 ### 3. Xử lý bắt lỗi (Validation)
 
-![Bắt lỗi Validate](./screenshots/validation.png) 
+![Bắt lỗi Validate](./screenshots/validate.png) 
 
 ---
 
