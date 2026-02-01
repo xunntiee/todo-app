@@ -17,12 +17,12 @@ export default function AppNavigator() {
       <Stack.Screen
         name="Todo"
         component={TodoScreen}
-        options={{ title: "Todo List" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="AddTodo"
         component={AddTodoScreen}
-        options={{ title: "Thêm Todo" }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

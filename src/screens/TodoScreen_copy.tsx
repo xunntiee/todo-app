@@ -1,6 +1,5 @@
 import {
   Alert,
-  FlatList,
   Pressable,
   SectionList,
   StyleSheet,
@@ -9,12 +8,20 @@ import {
 } from "react-native";
 import { useTodoStore } from "../stores/todoStores";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CheckCircle2, Circle, List, Menu, Plus, Search, Trash2 } from "lucide-react-native";
+import {
+  CheckCircle2,
+  Plus,
+  Trash2,
+  Menu,
+  Search,
+  List,
+  Circle,
+} from "lucide-react-native";
 import { useMemo, useState } from "react";
 
 type Filter = "all" | "active" | "done";
 
-export default function TodoScreen({ navigation }: any) {
+export default function TodoScreenCopy({ navigation }: any) {
   const todos = useTodoStore((state) => state.todos);
   const toggleTodo = useTodoStore((state) => state.toggleTodo);
   const deleteTodo = useTodoStore((state) => state.deleteTodo);
@@ -31,45 +38,45 @@ export default function TodoScreen({ navigation }: any) {
     if (filter !== "all") {
       return [
         {
-          title: filter === "active" ? "Active Tasks" : "Done",
+          title: filter === "active" ? "Active Tasks" : "Completed",
           data: filteredTodos,
-        }
-      ]
+        },
+      ];
     }
     return [
-      { title: "Today", data: todos.filter((t) => !t.isDone) },
+      { title: "Today, Oct 24", data: todos.filter((t) => !t.isDone) },
       { title: "Done", data: todos.filter((t) => t.isDone) },
     ];
   }, [todos, filter, filteredTodos]);
 
   const confirmDelete = (id: string) => {
-    Alert.alert("Xác nhận xóa", "Bạn có chắc chắn muốn xóa không?", [
-      {
-        text: "Hủy",
-        style: "cancel",
-      },
-      {
-        text: "OK",
-        style: "destructive",
-        onPress: () => deleteTodo(id),
-      },
-    ]);
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this task?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: () => deleteTodo(id) },
+      ],
+    );
   };
 
   const count = useMemo(() => {
     const total = todos.length;
+    const active = todos.filter((t) => !t.isDone).length;
     const done = todos.filter((t) => t.isDone).length;
-    return { total, done };
+    return { total, active, done };
   }, [todos]);
 
   const emptyList = () => (
     <View style={style.empty}>
-      <Text style={style.emptyTitle}>Không có dữ liệu</Text>
-      <Text style={style.emptyText}>Ấn nút + để thêm</Text>
+      <Text style={style.emptyTitle}>No tasks yet</Text>
+      <Text style={style.emptyText}>Tap + to add a new task</Text>
     </View>
   );
+
   return (
     <SafeAreaView style={style.container}>
+      {/* Header */}
       <View style={style.header}>
         <Pressable hitSlop={10}>
           <Menu color="white" size={24} />
@@ -79,6 +86,8 @@ export default function TodoScreen({ navigation }: any) {
           <Search color="white" size={24} />
         </Pressable>
       </View>
+
+      {/* Filter Bar */}
       <View style={style.filterBar}>
         <Pressable
           style={[
@@ -135,20 +144,23 @@ export default function TodoScreen({ navigation }: any) {
           </Text>
         </Pressable>
       </View>
+
       <SectionList
         sections={sections}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={emptyList}
+        stickySectionHeadersEnabled={false}
+        contentContainerStyle={{ paddingBottom: 100 }}
         renderItem={({ item }) => (
           <View style={style.todoCard}>
-            {/* Trái */}
             <Pressable style={style.left} onPress={() => toggleTodo(item.id)}>
-              <CheckCircle2
-                color={item.isDone ? "#3bf88aff" : "gray"}
-                size={35}
-              />
+              {item.isDone ? (
+                <CheckCircle2 color="#2ECC71" size={24} />
+              ) : (
+                <Circle color="#2ECC71" size={24} />
+              )}
             </Pressable>
-            {/* Giữa */}
+
             <View style={style.center}>
               <Text style={[style.title, item.isDone && style.titleDone]}>
                 {item.title}
@@ -165,46 +177,43 @@ export default function TodoScreen({ navigation }: any) {
               )}
             </View>
 
-            {/* Phải */}
             <Pressable
               style={style.right}
               hitSlop={10}
               onPress={() => confirmDelete(item.id)}
             >
-              <Text>
-                <Trash2 color="white" size={30} />
-              </Text>
+              <Trash2 color="#4A554F" size={20} />
             </Pressable>
           </View>
         )}
         renderSectionHeader={({ section }) => (
-          <View>
-            <Text style={style.today}>{section.title}</Text>
-            {section.title === "Today" && (
-              <Text style={style.countTodo}>
-                {count.total} Tasks • {count.done} Completed
+          <View style={style.sectionHeader}>
+            <Text style={style.sectionTitle}>{section.title}</Text>
+            {(section.title.includes("Today") ||
+              section.title === "Active Tasks") && (
+              <Text style={style.sectionSubtitle}>
+                {count.active} tasks • {count.done} completed
               </Text>
             )}
           </View>
         )}
       />
+
       <Pressable
         style={style.fab}
         onPress={() => navigation.navigate("AddTodo")}
       >
-        <Text style={{ fontSize: 35 }}>
-          <Plus color="white" size={35} />
-        </Text>
+        <Plus color="#0D1511" size={32} />
       </Pressable>
     </SafeAreaView>
   );
 }
+
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(1, 37, 13, 1)",
+    backgroundColor: "#0D1511",
   },
-
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -212,140 +221,116 @@ const style = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
   },
-
   headerTitle: {
     color: "white",
     fontSize: 20,
     fontWeight: "700",
   },
-
   filterBar: {
     flexDirection: "row",
-    alignItems: "center",
+    paddingHorizontal: 20,
     gap: 10,
-    padding: 10,
-    marginHorizontal: 20,
-    borderRadius: 10,
+    marginBottom: 20,
   },
-
   filterButton: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "rgba(167, 24, 24, 0.1)",
+    backgroundColor: "#1A261F",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    gap: 8,
   },
-
   filterButtonActive: {
-    backgroundColor: "rgba(70, 227, 78, 0.88)",
+    backgroundColor: "#2ECC71",
   },
   filterText: {
     color: "white",
-    fontSize: 16,
-    fontWeight: "500",
-  },
-
-  filterTextActive: {
-    color: "black",
-  },
-
-  today: {
-    color: "white",
-    fontSize: 30,
+    fontSize: 14,
     fontWeight: "600",
-    marginLeft: 10,
-    marginHorizontal: 10,
+  },
+  filterTextActive: {
+    color: "#0D1511",
+  },
+  sectionHeader: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
     marginTop: 10,
   },
-
-  countTodo: {
+  sectionTitle: {
     color: "white",
-    fontSize: 20,
-    fontWeight: "400",
-    marginLeft: 10,
-    marginHorizontal: 10,
-    marginTop: 10,
+    fontSize: 24,
+    fontWeight: "700",
   },
-
+  sectionSubtitle: {
+    color: "#8E9791",
+    fontSize: 14,
+    marginTop: 4,
+  },
   todoCard: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: "#123A2A",
-    borderRadius: 10,
-    marginBottom: 10,
-    marginHorizontal: 10,
-    marginTop: 10,
-    backgroundColor: "#0f5e30ff",
-    elevation: 4,
+    backgroundColor: "#1A261F",
+    marginHorizontal: 20,
+    marginBottom: 12,
+    padding: 16,
+    borderRadius: 12,
   },
-
   left: {
-    marginLeft: 10,
+    marginRight: 12,
   },
-
   center: {
     flex: 1,
-    alignItems: "flex-start",
-    justifyContent: "center",
-    marginLeft: 8,
   },
-
   right: {
-    marginRight: 10,
+    marginLeft: 12,
   },
-
   title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
-  },
-
-  description: {
     fontSize: 16,
+    fontWeight: "600",
     color: "white",
+    marginBottom: 4,
   },
-
+  description: {
+    fontSize: 13,
+    color: "#8E9791",
+  },
   titleDone: {
-    fontSize: 20,
     textDecorationLine: "line-through",
-    opacity: 0.5,
+    color: "#8E9791",
   },
-
   descriptionDone: {
     textDecorationLine: "line-through",
-    opacity: 0.4,
   },
-
   empty: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 24,
+    paddingTop: 100,
   },
-
   emptyTitle: {
-    fontSize: 25,
-    fontWeight: "bold",
+    fontSize: 18,
+    fontWeight: "700",
+    color: "white",
+    marginBottom: 8,
   },
-
   emptyText: {
-    fontSize: 22,
-    color: "gray",
+    fontSize: 14,
+    color: "#8E9791",
   },
-
   fab: {
     position: "absolute",
-    backgroundColor: "lightgreen",
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    backgroundColor: "#2ECC71",
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     justifyContent: "center",
     alignItems: "center",
-    bottom: 10,
-    right: 50,
+    bottom: 30,
+    right: 30,
+    elevation: 8,
+    shadowColor: "#2ECC71",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
 });
