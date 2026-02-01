@@ -1,72 +1,33 @@
 import {
-    Alert,
+  Alert,
   FlatList,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { useTodoStore } from "../stores/todoStores";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
 
-export default function TodoScreen() {
+export default function TodoScreen({ navigation }: any) {
   const todos = useTodoStore((state) => state.todos);
   const toggleTodo = useTodoStore((state) => state.toggleTodo);
   const deleteTodo = useTodoStore((state) => state.deleteTodo);
   const confirmDelete = (id: string) => {
-    Alert.alert(
-        "Xác nhận xóa",
-        "Bạn có chắc chắn muốn xóa không?",
-        [
-            {
-                text: "Hủy",
-                style: "cancel",
-            },
-            {
-                text: "OK",
-                style: "destructive",
-                onPress: () => deleteTodo(id),
-            }
-        ]
-    )
+    Alert.alert("Xác nhận xóa", "Bạn có chắc chắn muốn xóa không?", [
+      {
+        text: "Hủy",
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        style: "destructive",
+        onPress: () => deleteTodo(id),
+      },
+    ]);
   };
-  const addTodo = useTodoStore((state) => state.addTodo);
-  const [title, setTitle] = useState<string>("");
-  const [desc, setDesc] = useState<string>("");
-  const handleAddTodo = () => {
-    if(title.trim() === "") {
-        Alert.alert("Lỗi!", "Tiêu đề không được để trống");
-        return;
-    }
-    addTodo(title, desc);
-    setTitle("");
-    setDesc("");
-  }
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Text style={{ fontSize: 24, fontWeight: "bold" }}>Danh sách Test</Text>
-      <View>
-              <TextInput
-                value={title}
-                onChangeText={setTitle}
-                style={style.textInput}
-                placeholder="Nhập tiêu đề: ...."
-                placeholderTextColor={"red"}
-              />
-              <TextInput
-                value={desc}
-                onChangeText={setDesc}
-                style={style.textInput}
-                placeholder="Nhập mô tả: ...."
-                placeholderTextColor={"red"}
-              />
-              <Pressable onPress={handleAddTodo}>
-                <Text>Thêm</Text>
-              </Pressable>
-            </View>
       <FlatList
         data={todos}
         keyExtractor={(item) => item.id}
@@ -88,6 +49,9 @@ export default function TodoScreen() {
           </View>
         )}
       />
+      <Pressable style={style.fab} onPress={() => navigation.navigate("AddTodo")}>
+        <Text style={{ fontSize: 35 }}>+</Text>
+      </Pressable>
     </SafeAreaView>
   );
 }
@@ -112,4 +76,15 @@ const style = StyleSheet.create({
     textDecorationLine: "line-through",
     opacity: 0.5,
   },
+  fab: {
+    position: "absolute",
+    backgroundColor: "lightgreen",
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    justifyContent: "center",
+    alignItems: "center",
+    bottom: 20,
+    right: 20,
+  }
 });
